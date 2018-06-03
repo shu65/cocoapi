@@ -55,12 +55,16 @@ import itertools
 from . import mask as maskUtils
 import os
 from collections import defaultdict
-import sys
-PYTHON_VERSION = sys.version_info[0]
-if PYTHON_VERSION == 2:
-    from urllib import urlretrieve
-elif PYTHON_VERSION == 3:
+
+try:                 # Python 3
     from urllib.request import urlretrieve
+except ImportError:  # Python 2
+    from urllib import urlretrieve
+
+try:                 # Python 2
+    unicode
+except NameError:    # Python 3
+    unicode = str  
 
 
 def _isArrayLike(obj):
@@ -431,3 +435,4 @@ class COCO:
         rle = self.annToRLE(ann)
         m = maskUtils.decode(rle)
         return m
+    
